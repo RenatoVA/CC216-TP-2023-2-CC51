@@ -22,7 +22,10 @@ en_blanco <- function(x){
   }
 }
 en_blanco(dataset)
+dataset$agent<-NULL
+dataset$company<-NULL
 #pregunta 1
+#¿Cuántas reservas se realizan por tipo de hotel? o ¿Qué tipo de hotel prefiere la gente?
 #tabla de frecuencias de la columna hotel
 install.packages("knitr")
 install.packages("dplyr")
@@ -43,6 +46,7 @@ freq_table %>%
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), colour = "white")+
   labs(title = "Cantidad de reservas realizadas segun tipo de hotel")
 #pregunta2
+#¿Está aumentando la demanda con el tiempo?
 disp_line1<- dataset %>%
   filter(arrival_date_year == 2015) %>%
   count(arrival_date_month)
@@ -71,6 +75,8 @@ ggplot(data = disp_line3, aes(x = arrival_date_month, y = n)) +
   geom_text(aes(label = n), size = 4,colour="blue")+
   labs(title = "Reservas realizadas en el año 2017 según mes", x = "Mes", y = "Número de reservas")
 #pregunta3y4
+#¿Cuándo es menor la demanda de reservas?¿Cuándo se producen las temporadas de reservas: alta, media y baja?
+
 disp_line<- dataset %>%
   count(arrival_date_month)
 disp_line$arrival_date_month <- factor(disp_line$arrival_date_month,levels =c("January","February","March","April","May","June","July","August","September","October","November","December"))
@@ -82,6 +88,7 @@ ggplot(data = disp_line, aes(x = arrival_date_month, y = n)) +
 
 
 #´pregunta5
+#¿Cuántas reservas incluyen niños y/o bebes? 
 df_chba <- dataset %>%
   select(children, babies)
 head(df_chba)
@@ -97,6 +104,7 @@ ggplot(df_chba, aes(x="", y=n, fill=has_children_or_babies))+
   geom_text(aes(label=paste0(round(n/sum(n)*100, 2), "%")), position = position_stack(vjust = 0.5),colour="white",size=5)+
   labs(title = "Porcentaje de reservas que tienen niños Y/O bebes")
 #pregunta6
+#¿Es importante contar con espacios de estacionamiento?
 parking <- dataset %>%
   select(required_car_parking_spaces)
 parking$requires_parking <- ifelse(parking$required_car_parking_spaces > 0, "Yes", "No")
@@ -113,15 +121,40 @@ ggplot(parkingtable, aes(x="", y=n, fill=requires_parking))+
   labs(title = "Porcentaje de reservas que solicitaron estacionamiento")+
   expand_limits(x=c(-1,1))
 #pregunta7
+#¿En qué meses del año se producen más cancelaciones de reservas?
 bookingcanceled<-dataset %>%
   group_by(arrival_date_month) %>%
   summarise(n_canceled = sum(is_canceled == "1"))
 print(bookingcanceled)
+bookingcanceled$arrival_date_month <- factor(bookingcanceled$arrival_date_month,levels =c("January","February","March","April","May","June","July","August","September","October","November","December"))
 ggplot(bookingcanceled, aes(x = arrival_date_month, y = n_canceled)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   labs(title = "Cantidad de reservas canceladas segun mes", x = "Mes", y = "Número de reservas")+
   geom_text(aes(label = n_canceled), position = position_stack(vjust = 0.5), colour = "white")
 #pregunta8
+#¿Que tipo de habitacion es la mas reservada? 
+roomtype<-dataset %>%
+  count(reserved_room_type)
+print(roomtype)
+ggplot(roomtype, aes(x = reserved_room_type, y = n)) +
+  geom_bar(stat = "identity", fill = "skyblue", position="stack") +
+  labs(title = "Cantidad de reservas realizadas segun tipo de habitacion", x = "Tipo de habitacion", y = "Número de reservas")+
+  geom_text(aes(label = n), size=4, colour = "black",fontface="bold")
 #pregunta9
+#¿Cuales son los tipos de habitaciones mas caros y mas baratos?
+roomsprice<-dataset%>%
+  group_by(assigned_room_type) %>%
+  summarise(price=sum(adr))
+roomtype2<-dataset %>%
+  count(assigned_room_type)
+roomsprice$average<-as.numeric(roomsprice$price)/as.integer(roomtype2$n)
+print(roomsprice)
+
 #pregunta10
+#¿Cual es la relacion entre el tipo de hotel y la duracion de la estadia?
+
 #pregunta11
+#¿De que pais provienen los clientes que realizan mas reservas segun el tipo de hotel?
+
+#pregunta12
+#¿Cual es el promedio de costo de las reservas? ¿Existen valores atipicos?
