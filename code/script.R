@@ -76,16 +76,39 @@ ggplot(data = disp_line3, aes(x = arrival_date_month, y = n)) +
   labs(title = "Reservas realizadas en el año 2017 según mes", x = "Mes", y = "Número de reservas")
 #pregunta3y4
 #¿Cuándo es menor la demanda de reservas?¿Cuándo se producen las temporadas de reservas: alta, media y baja?
+dataset$season <- ifelse(
+  dataset$arrival_date_month %in% c("June", "July", "August"),
+  "summer",
+  ifelse(
+    dataset$arrival_date_month %in% c("September", "October", "November"),
+    "fall",
+    ifelse(
+      dataset$arrival_date_month %in% c("December", "January", "February"),
+      "winter",
+      "spring"
+    )
+  )
+)
+
 
 disp_line<- dataset %>%
-  count(arrival_date_month)
-disp_line$arrival_date_month <- factor(disp_line$arrival_date_month,levels =c("January","February","March","April","May","June","July","August","September","October","November","December"))
-ggplot(data = disp_line, aes(x = arrival_date_month, y = n)) +
+  count(season)
+
+#disp_line$arrival_date_month <- factor(disp_line$arrival_date_month,levels =c("January","February","March","April","May","June","July","August","September","October","November","December"))
+ggplot(data = disp_line, aes(x = season, y = n)) +
   geom_point(size = 6,colour="#FFFFFF") +
   geom_line(group = 1) +
   geom_text(aes(label = n), size = 4,colour="blue")+
-  labs(title = "Reservas realizadas según mes", x = "Mes", y = "Número de reservas")
-
+  labs(title = "Reservas realizadas según estaciones del año", x = "Estacion", y = "Número de reservas")
+ggplot(disp_line, aes(x = season, y = n,fill = season)) +
+  geom_bar(stat = "identity") +
+  labs(
+    x = "Estacion",
+    y = "Cantidad de reservas",
+    title = "Reservas realizadas según estaciones del año"
+  ) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), colour = "white",fontface="bold")+
+  theme_minimal()
 
 #´pregunta5
 #¿Cuántas reservas incluyen niños y/o bebes? 
@@ -148,10 +171,24 @@ roomsprice<-dataset%>%
 roomtype2<-dataset %>%
   count(assigned_room_type)
 roomsprice$average<-as.numeric(roomsprice$price)/as.integer(roomtype2$n)
+roomsprice$average<-as.integer(roomsprice$average)
 print(roomsprice)
+ggplot(roomsprice, aes(x = assigned_room_type, y = average, fill = assigned_room_type)) +
+  geom_bar(stat = "identity") +
+  labs(
+    x = "Tipo de habitacion",
+    y = "Precio promedio",
+    title = "Distribucion de precio promedio de reserva segun tipo de habitación",
+    fill="Tipo de habitacion"
+  ) +
+  geom_text(aes(label = average), position = position_stack(vjust = 0.5), colour = "white",fontface="bold")+
+  theme_minimal()
 
 #pregunta10
 #¿Cual es la relacion entre el tipo de hotel y la duracion de la estadia?
+staytime<-dataset%>%
+  select(hotel,stays_in_week_nights,stays_in_weekend_nights)
+staytime$days<-as.integer(staytime$stays_in_week_nights)+as.integer(staytime$stays_in_weekend_nights)
 
 #pregunta11
 #¿De que pais provienen los clientes que realizan mas reservas segun el tipo de hotel?
