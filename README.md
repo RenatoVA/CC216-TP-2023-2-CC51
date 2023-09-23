@@ -181,7 +181,26 @@ El objetivo principal de este estudio es realizar un análisis exhaustivo del co
 </table>
 
 # Conclusiones
+1. Durante los años 2015-2017, el hotel más reservado fue el "City Hotel" con 53,428 reservas, seguido por el "Resort Hotel" con 33,968 reservas.
 
+2. Se observa un aumento constante en la cantidad de reservas cada año, a pesar de las fluctuaciones estacionales.
+
+3. La temporada más popular para ambas categorías de hoteles es el verano, seguida de la primavera, mientras que el invierno tiene la menor demanda.
+
+4. Solo el 7.82% de las reservas incluyen niños o bebés, mientras que el 92.18% no los incluye.
+
+5. El 6.21% de las reservas solicita estacionamiento, indicando que la mayoría no lo necesita.
+   
+7. Los meses de agosto, julio y mayo experimentan el mayor número de cancelaciones durante los años 2015-2017.
+
+8. El tipo de habitación "A" es el más reservado, seguido por "D" y "E", mientras que otros tipos tienen menos registros.
+
+9. Los tipos de habitaciones más costosos son H, G y F, con precios promedio de 171, 166 y 151 respectivamente, mientras que los más económicos son L, I y K.
+
+10. El "Resort Hotel" tiene una estadía promedio más larga que el "City Hotel", con una mediana de 5 días frente a 3 días.
+
+11. Los hoteles "City Hotel" tienden a ser más costosos en promedio, con una mediana de 105.3, mientras que los "Resort Hotel" son más económicos, con una mediana de 
+     79.5. Los datos muestran una gran dispersión y valores atípicos en los precios.
 
 # Licencia
  Se ha acordado usar para este proyecto analítico la licencia [Atribución-NoComercial-CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es)
