@@ -1,3 +1,6 @@
+install.packages("knitr")
+install.packages("dplyr")
+install.packages("ggplot2")
 dataset<-read.csv("../data/hotel_bookings.csv",header=TRUE,sep=",",stringsAsFactors = FALSE)
 head(dataset)
 str(dataset)
@@ -27,9 +30,6 @@ dataset$company<-NULL
 #pregunta 1
 #¿Cuántas reservas se realizan por tipo de hotel? o ¿Qué tipo de hotel prefiere la gente?
 #tabla de frecuencias de la columna hotel
-install.packages("knitr")
-install.packages("dplyr")
-install.packages("ggplot2")
 library(dplyr)
 library(ggplot2)
 library(knitr)
@@ -44,36 +44,68 @@ freq_table %>%
   xlab("Tipo de hotel") +
   ylab("Número de reservas") +
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), colour = "white")+
-  labs(title = "Cantidad de reservas realizadas segun tipo de hotel")
+  labs(title = "Cantidad de reservas realizadas segun tipo de hotel en los años 2015, 2016 y 2017")
 #pregunta2
 #¿Está aumentando la demanda con el tiempo?
+
 disp_line1<- dataset %>%
   filter(arrival_date_year == 2015) %>%
+  filter(hotel == "City Hotel")%>%
   count(arrival_date_month)
 disp_line2<- dataset %>%
   filter(arrival_date_year == 2016) %>%
+  filter(hotel == "City Hotel")%>%
   count(arrival_date_month)
 disp_line3<- dataset %>%
   filter(arrival_date_year == 2017) %>%
+  filter(hotel == "City Hotel")%>%
+  count(arrival_date_month)
+disp_line1_2<- dataset %>%
+  filter(arrival_date_year == 2015) %>%
+  filter(hotel == "Resort Hotel")%>%
+  count(arrival_date_month)
+disp_line2_2<- dataset %>%
+  filter(arrival_date_year == 2016) %>%
+  filter(hotel == "Resort Hotel")%>%
+  count(arrival_date_month)
+disp_line3_2<- dataset %>%
+  filter(arrival_date_year == 2017) %>%
+  filter(hotel == "Resort Hotel")%>%
   count(arrival_date_month)
 disp_line1$arrival_date_month <- factor(disp_line1$arrival_date_month,levels =c("January","February","March","April","May","June","July","August","September","October","November","December"))
 disp_line2$arrival_date_month <- factor(disp_line2$arrival_date_month,levels =c("January","February","March","April","May","June","July","August","September","October","November","December"))
 disp_line3$arrival_date_month <- factor(disp_line3$arrival_date_month,levels =c("January","February","March","April","May","June","July","August","September","October","November","December"))
+disp_line1_2$arrival_date_month <- factor(disp_line1_2$arrival_date_month,levels =c("January","February","March","April","May","June","July","August","September","October","November","December"))
+disp_line2_2$arrival_date_month <- factor(disp_line2_2$arrival_date_month,levels =c("January","February","March","April","May","June","July","August","September","October","November","December"))
+disp_line3_2$arrival_date_month <- factor(disp_line3_2$arrival_date_month,levels =c("January","February","March","April","May","June","July","August","September","October","November","December"))
 ggplot(data = disp_line1, aes(x = arrival_date_month, y = n)) +
-  geom_point(size = 6,colour="#FFFFFF") +
-  geom_line(group = 1) +
-  geom_text(aes(label = n), size = 4,colour="blue")+
-  labs(title = "Reservas realizadas en el año 2015 según mes", x = "Mes", y = "Número de reservas")
+  geom_point(colour="#FFFFFF",size=4) +
+  geom_line(group = 1,colour="blue",linewidth=1.2) +
+  geom_point(data=disp_line1_2,aes(x = arrival_date_month, y = n),colour="white",size=4)+
+  labs(title = "Reservas realizadas en el año 2015 según mes por tipo de hotel", x = "Mes", y = "Número de reservas") +
+  geom_line(data = disp_line1_2, aes(x = arrival_date_month, y = n), colour="red",group=1,linewidth=1.2)+
+  geom_text(aes(label = n), size = 4,colour="Black",fontface="bold")+
+  geom_text(data=disp_line1_2,aes(label = n), size = 4,colour="Black",fontface="bold")+
+  theme_minimal()
+  
 ggplot(data = disp_line2, aes(x = arrival_date_month, y = n)) +
-  geom_point(size = 6,colour="#FFFFFF") +
-  geom_line(group = 1) +
-  geom_text(aes(label = n), size = 4,colour="blue")+
-  labs(title = "Reservas realizadas en el año 2016 según mes", x = "Mes", y = "Número de reservas")
+  geom_point(colour="#FFFFFF",size=4) +
+  geom_line(group = 1,colour="blue",linewidth=1.2) +
+  geom_point(data=disp_line1_2,aes(x = arrival_date_month, y = n),colour="white",size=4)+
+  labs(title = "Reservas realizadas en el año 2016 según mes por tipo de hotel", x = "Mes", y = "Número de reservas") +
+  geom_line(data = disp_line2_2, aes(x = arrival_date_month, y = n), colour="red",group=1,linewidth=1.2)+
+  geom_text(aes(label = n), size = 4,colour="Black",fontface="bold")+
+  geom_text(data=disp_line2_2,aes(label = n), size = 4,colour="Black",fontface="bold")+
+  theme_minimal()
 ggplot(data = disp_line3, aes(x = arrival_date_month, y = n)) +
-  geom_point(size = 6,colour="#FFFFFF") +
-  geom_line(group = 1) +
-  geom_text(aes(label = n), size = 4,colour="blue")+
-  labs(title = "Reservas realizadas en el año 2017 según mes", x = "Mes", y = "Número de reservas")
+  geom_point(colour="#FFFFFF",size=4) +
+  geom_line(group = 1,colour="blue",linewidth=1.2) +
+  geom_point(data=disp_line3_2,aes(x = arrival_date_month, y = n),colour="white",size=4)+
+  labs(title = "Reservas realizadas en el año 2017 según mes por tipo de hotel", x = "Mes", y = "Número de reservas") +
+  geom_line(data = disp_line3_2, aes(x = arrival_date_month, y = n), colour="red",group=1,linewidth=1.2)+
+  geom_text(aes(label = n), size = 4,colour="Black",fontface="bold")+
+  geom_text(data=disp_line3_2,aes(label = n), size = 4,colour="Black",fontface="bold")+
+  theme_minimal()
 #pregunta3y4
 #¿Cuándo es menor la demanda de reservas?¿Cuándo se producen las temporadas de reservas: alta, media y baja?
 dataset$season <- ifelse(
@@ -91,21 +123,27 @@ dataset$season <- ifelse(
 )
 
 
-disp_line<- dataset %>%
+displine1<- dataset %>%
+  filter(hotel=="Resort Hotel") %>%
   count(season)
-
-#disp_line$arrival_date_month <- factor(disp_line$arrival_date_month,levels =c("January","February","March","April","May","June","July","August","September","October","November","December"))
-ggplot(data = disp_line, aes(x = season, y = n)) +
-  geom_point(size = 6,colour="#FFFFFF") +
-  geom_line(group = 1) +
-  geom_text(aes(label = n), size = 4,colour="blue")+
-  labs(title = "Reservas realizadas según estaciones del año", x = "Estacion", y = "Número de reservas")
-ggplot(disp_line, aes(x = season, y = n,fill = season)) +
+displine2<- dataset %>%
+  filter(hotel=="City Hotel") %>%
+  count(season)
+ggplot(displine1, aes(x = season, y = n,fill = season)) +
   geom_bar(stat = "identity") +
   labs(
     x = "Estacion",
     y = "Cantidad de reservas",
-    title = "Reservas realizadas según estaciones del año"
+    title = "Reservas realizadas en City Hotel según estaciones de los años 2015, 2016 y 2017"
+  ) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), colour = "white",fontface="bold")+
+  theme_minimal()
+ggplot(displine2, aes(x = season, y = n,fill = season)) +
+  geom_bar(stat = "identity") +
+  labs(
+    x = "Estacion",
+    y = "Cantidad de reservas",
+    title = "Reservas realizadas en Resort Hotel según estaciones de los años 2015, 2016 y 2017" 
   ) +
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), colour = "white",fontface="bold")+
   theme_minimal()
@@ -114,7 +152,6 @@ ggplot(disp_line, aes(x = season, y = n,fill = season)) +
 #¿Cuántas reservas incluyen niños y/o bebes? 
 df_chba <- dataset %>%
   select(children, babies)
-head(df_chba)
 df_chba$has_children_or_babies <- ifelse(df_chba$children > 0 | df_chba$babies > 0, "Yes", "No")
 table(df_chba$has_children_or_babies)
 df_chba<- df_chba %>%
@@ -125,7 +162,7 @@ ggplot(df_chba, aes(x="", y=n, fill=has_children_or_babies))+
   coord_polar("y", start=0) +
   scale_fill_manual(values=c("#131D6A", "#DAB200"),labels=c("No","SI"),name = "Tiene niños y/o bebés")+
   geom_text(aes(label=paste0(round(n/sum(n)*100, 2), "%")), position = position_stack(vjust = 0.5),colour="white",size=5)+
-  labs(title = "Porcentaje de reservas que tienen niños Y/O bebes")
+  labs(title = "Porcentaje de reservas que tienen niños Y/O bebes en los años 2015, 2016 y 2017")
 #pregunta6
 #¿Es importante contar con espacios de estacionamiento?
 parking <- dataset %>%
@@ -133,35 +170,33 @@ parking <- dataset %>%
 parking$requires_parking <- ifelse(parking$required_car_parking_spaces > 0, "Yes", "No")
 parkingtable<- parking%>%
   count(requires_parking)
-print(parkingtable)
+
 percentparking<-(parkingtable$n[2]/sum(parkingtable$n))*100
-print(percentparking)
+
 ggplot(parkingtable, aes(x="", y=n, fill=requires_parking))+
   geom_bar(width = 1, stat = "identity") +
   coord_polar("y", start=0) +
   scale_fill_manual(values=c("#F8FF64", "#79E57B"),labels=c("No","SI"),name = "Requieren estacionamiento")+
   geom_text(aes(label=paste0(round(n/sum(n)*100, 2), "%")), position = position_stack(vjust = 0.5))+
-  labs(title = "Porcentaje de reservas que solicitaron estacionamiento")+
+  labs(title = "Porcentaje de reservas que solicitaron estacionamiento en los años 2015, 2016 y 2017")+
   expand_limits(x=c(-1,1))
 #pregunta7
 #¿En qué meses del año se producen más cancelaciones de reservas?
 bookingcanceled<-dataset %>%
   group_by(arrival_date_month) %>%
   summarise(n_canceled = sum(is_canceled == "1"))
-print(bookingcanceled)
 bookingcanceled$arrival_date_month <- factor(bookingcanceled$arrival_date_month,levels =c("January","February","March","April","May","June","July","August","September","October","November","December"))
 ggplot(bookingcanceled, aes(x = arrival_date_month, y = n_canceled)) +
   geom_bar(stat = "identity", fill = "steelblue") +
-  labs(title = "Cantidad de reservas canceladas segun mes", x = "Mes", y = "Número de reservas")+
+  labs(title = "Cantidad de reservas canceladas segun mes en los años 2015, 2016 y 2017", x = "Mes", y = "Número de reservas")+
   geom_text(aes(label = n_canceled), position = position_stack(vjust = 0.5), colour = "white")
 #pregunta8
 #¿Que tipo de habitacion es la mas reservada? 
 roomtype<-dataset %>%
   count(reserved_room_type)
-print(roomtype)
 ggplot(roomtype, aes(x = reserved_room_type, y = n)) +
   geom_bar(stat = "identity", fill = "skyblue", position="stack") +
-  labs(title = "Cantidad de reservas realizadas segun tipo de habitacion", x = "Tipo de habitacion", y = "Número de reservas")+
+  labs(title = "Cantidad de reservas realizadas segun tipo de habitacion en los años 2015, 2016 y 2017", x = "Tipo de habitacion", y = "Número de reservas")+
   geom_text(aes(label = n), size=4, colour = "black",fontface="bold")
 #pregunta9
 #¿Cuales son los tipos de habitaciones mas caros y mas baratos?
@@ -172,13 +207,12 @@ roomtype2<-dataset %>%
   count(assigned_room_type)
 roomsprice$average<-as.numeric(roomsprice$price)/as.integer(roomtype2$n)
 roomsprice$average<-as.integer(roomsprice$average)
-print(roomsprice)
 ggplot(roomsprice, aes(x = assigned_room_type, y = average, fill = assigned_room_type)) +
   geom_bar(stat = "identity") +
   labs(
     x = "Tipo de habitacion",
     y = "Precio promedio",
-    title = "Distribucion de precio promedio de reserva segun tipo de habitación",
+    title = "Distribucion de precio promedio de reserva segun tipo de habitación en los años 2015, 2016 y 2017",
     fill="Tipo de habitacion"
   ) +
   geom_text(aes(label = average), position = position_stack(vjust = 0.5), colour = "white",fontface="bold")+
@@ -189,9 +223,49 @@ ggplot(roomsprice, aes(x = assigned_room_type, y = average, fill = assigned_room
 staytime<-dataset%>%
   select(hotel,stays_in_week_nights,stays_in_weekend_nights)
 staytime$days<-as.integer(staytime$stays_in_week_nights)+as.integer(staytime$stays_in_weekend_nights)
+totalstay<-staytime%>%
+  count(hotel)
+staytime2<-staytime %>%
+  group_by(hotel) %>%
+  summarise(sumdays=sum(days))
+staytime2$average<-as.integer(staytime2$sumdays)/as.integer(totalstay$n)
+staytime2$average<-as.integer(staytime2$average)
 
+staymedian1<-staytime%>%
+  filter(hotel=="City Hotel")
+staymedian2<-staytime%>%
+  filter(hotel=="Resort Hotel")
+
+ggplot(staytime, aes(x = days, y = hotel)) +
+  geom_boxplot(fill =c("yellow","orange"))+
+  geom_text(aes(x=median(staymedian1$days),y = "City Hotel", label = median(staymedian1$days)),size=5)+
+  geom_text(aes(x=median(staymedian2$days),y = "Resort Hotel", label = median(staymedian2$days)),size=5)+
+  labs(
+    x = "Dias de estadia",
+    y = "Tipo de hotel",
+    title = "Distribucion de los dias de estadia segun tipo de hotel en los años 2015, 2016 y 2017",
+    fill="Tipo de habitacion"
+  )+
+  theme_minimal()
 #pregunta11
-#¿De que pais provienen los clientes que realizan mas reservas segun el tipo de hotel?
-
-#pregunta12
 #¿Cual es el promedio de costo de las reservas? ¿Existen valores atipicos?
+adr1<- dataset %>%
+  filter(hotel=="City Hotel")
+adr2<- dataset %>%
+  filter(hotel=="Resort Hotel")
+summary(dataset$adr)
+dataset <- dataset[dataset$adr != 5400, ]
+ggplot(dataset, aes(x = hotel, y = adr)) +
+  geom_boxplot(fill =c("skyblue","lightgreen")) +
+  geom_text(aes(x="City Hotel",y = median(adr1$adr), label = median(adr1$adr)))+
+  geom_text(aes(x="Resort Hotel",y = median(adr2$adr), label = median(adr2$adr)))+
+  labs(
+    x = "Precio",
+    y = "Tipo de hotel",
+    title = "Distribucion de los precios segun tipo de hotel en los años 2015, 2016 y 2017",
+  )+
+  theme_minimal()
+#guardando nuevo dataset
+write.csv(dataset, file = "newdataset.csv")
+
+
